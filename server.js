@@ -6,6 +6,8 @@ const http = require('http');
 const moment = require('moment');
 require('dotenv').config();
 
+const { addNewUser, getCurrentUser, removeUser } = require('./users');
+
 const PORT = process.env.PORT || 8000;
 const EVENTS = {
     SERVER_SEND_MESSAGE: 'SERVER_SEND_MESSAGE',
@@ -27,17 +29,22 @@ server.listen(PORT, () => {
 const io = socketio(server);
 
 io.on('connection', (socket) => {
-    // socket.on('disconnect', () => {
-    //     io.emit(EVENTS.SERVER_SEND_MESSAGE, { msg: 'user live the room', sender: 'server bot', time: `${moment().format('LT')}` });
-    // })
-
-    socket.on(EVENTS.USER_SEND_MESSAGE, (payload) => {
-        socket.broadcast.emit(EVENTS.SERVER_SEND_MESSAGE, { msg: payload.msg, sender: payload.sender, time: payload.time });
+    const uid = socket.id;
+    socket.on(EVENTS.NEW_USER, (newUser) => {
+        const user = addNewUser(uid, newUser);
+        socket.emit(EVENTS.SERVER_SEND_MESSAGE, { msg: `Wellcome ${user.userName} to our chat room 😍`, sender: 'server bot', time: `${moment().format('LT')}` });
+        socket.broadcast.emit(EVENTS.SERVER_SEND_MESSAGE, { msg: `${user.userName}  has joined the chat`, sender: 'server bot', time: `${moment().format('LT')}` })
     })
 
-    socket.on(EVENTS.NEW_USER, (newUser) => {
-        socket.emit(EVENTS.SERVER_SEND_MESSAGE, { msg: `Wellcome ${newUser} to our chat room 😍`, sender: 'server bot', time: `${moment().format('LT')}` });
-        socket.broadcast.emit(EVENTS.SERVER_SEND_MESSAGE, { msg: `${newUser} has join the server`, sender: 'server bot', time: `${moment().format('LT')}` })
+    socket.on(EVENTS.USER_SEND_MESSAGE, (msg) => {
+        const user = getCurrentUser(uid);
+        console.log(user);
+        io.emit(EVENTS.SERVER_SEND_MESSAGE, { msg: msg, sender: user.userName, time: `${moment().format('LT')}` });
+    })
+
+    socket.on('disconnect', () => {
+        const user = removeUser(uid);
+        io.emit(EVENTS.SERVER_SEND_MESSAGE, { msg: `${user.userName} left the room`, sender: 'server bot', time: `${moment().format('LT')}` });
     })
 })
 
