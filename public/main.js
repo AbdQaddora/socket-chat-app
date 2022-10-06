@@ -6,7 +6,7 @@ const EVENTS = {
 }
 
 let user = window.location.search.split('=')[1];
-socket.emit(EVENTS.NEW_USER, user);
+socket.emit(EVENTS.NEW_USER, user.replaceAll('+', '_'));
 
 const messageContainer = document.getElementById('messages-container');
 const messageForm = document.getElementById('msg-form');
