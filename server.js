@@ -32,7 +32,7 @@ io.on('connection', (socket) => {
     // })
 
     socket.on(EVENTS.USER_SEND_MESSAGE, (payload) => {
-        io.emit(EVENTS.SERVER_SEND_MESSAGE, { msg: payload.msg, sender: payload.sender, time: `${moment().format('LT')}` });
+        socket.broadcast.emit(EVENTS.SERVER_SEND_MESSAGE, { msg: payload.msg, sender: payload.sender, time: payload.time });
     })
 
     socket.on(EVENTS.NEW_USER, (newUser) => {
