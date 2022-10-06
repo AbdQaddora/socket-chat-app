@@ -39,8 +39,10 @@ const GenerateNewMessageBlock = (msg, sender, time) => {
 messageForm && messageForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const msg = messageForm_input.value;
-    socket.emit(EVENTS.USER_SEND_MESSAGE, msg);
-    messageForm_input.value = '';
-    messageForm_input.focus();
+    if (msg !== '') {
+        socket.emit(EVENTS.USER_SEND_MESSAGE, msg);
+        messageForm_input.value = '';
+        messageForm_input.focus();
+    }
 });
 
