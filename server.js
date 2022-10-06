@@ -30,22 +30,27 @@ const io = socketio(server);
 
 io.on('connection', (socket) => {
     const uid = socket.id;
-    socket.on(EVENTS.NEW_USER, (newUser) => {
-        const user = addNewUser(uid, newUser);
-        socket.emit(EVENTS.SERVER_SEND_MESSAGE, { msg: `Wellcome ${user.userName} to our chat room 😍`, sender: 'server bot', time: `${moment().format('LT')}` });
-        socket.broadcast.emit(EVENTS.SERVER_SEND_MESSAGE, { msg: `${user.userName}  has joined the chat`, sender: 'server bot', time: `${moment().format('LT')}` })
-    })
+    try {
+        socket.on(EVENTS.NEW_USER, (newUser) => {
+            const user = addNewUser(uid, newUser);
+            socket.emit(EVENTS.SERVER_SEND_MESSAGE, { msg: `Wellcome ${user.userName} to our chat room 😍`, sender: 'server bot', time: `${moment().format('LT')}` });
+            socket.broadcast.emit(EVENTS.SERVER_SEND_MESSAGE, { msg: `${user.userName}  has joined the chat`, sender: 'server bot', time: `${moment().format('LT')}` })
+        })
 
-    socket.on(EVENTS.USER_SEND_MESSAGE, (msg) => {
-        const user = getCurrentUser(uid);
-        console.log(user);
-        io.emit(EVENTS.SERVER_SEND_MESSAGE, { msg: msg, sender: user.userName, time: `${moment().format('LT')}` });
-    })
+        socket.on(EVENTS.USER_SEND_MESSAGE, (msg) => {
+            const user = getCurrentUser(uid);
+            console.log(user);
+            io.emit(EVENTS.SERVER_SEND_MESSAGE, { msg: msg, sender: user.userName, time: `${moment().format('LT')}` });
+        })
 
-    socket.on('disconnect', () => {
-        const user = removeUser(uid);
-        io.emit(EVENTS.SERVER_SEND_MESSAGE, { msg: `${user.userName} left the room`, sender: 'server bot', time: `${moment().format('LT')}` });
-    })
+        socket.on('disconnect', () => {
+            const user = removeUser(uid);
+            io.emit(EVENTS.SERVER_SEND_MESSAGE, { msg: `${user.userName} left the room`, sender: 'server bot', time: `${moment().format('LT')}` });
+        })
+    } catch (error) {
+        console.log(error);
+    }
+
 })
 
 

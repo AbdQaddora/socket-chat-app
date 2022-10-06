@@ -7,12 +7,7 @@ const addNewUser = (uid, userName) => {
 }
 
 const getCurrentUser = (uid) => {
-    try {
-        return users.filter(user => user.uid === uid)[0];
-    } catch (error) {
-        console.log(error);
-    }
-    return 'error'
+    return users.filter(user => user.uid === uid)[0];
 }
 
 const removeUser = (uid) => {
