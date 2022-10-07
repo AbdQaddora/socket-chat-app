@@ -12,6 +12,8 @@ const PORT = process.env.PORT || 8000;
 const EVENTS = {
     SERVER_SEND_MESSAGE: 'SERVER_SEND_MESSAGE',
     USER_SEND_MESSAGE: 'USER_SEND_MESSAGE',
+    USER_SEND_IMAGE: 'USER_SEND_IMAGE',
+    SERVER_SEND_IMAGE: 'SERVER_SEND_IMAGE',
     NEW_USER: 'NEW_USER'
 }
 
@@ -34,7 +36,6 @@ const io = socketio(server);
 
 io.on('connection', (socket) => {
     const uid = socket.id;
-    console.log(uid);
     try {
         socket.on(EVENTS.NEW_USER, (newUser) => {
             const user = addNewUser(uid, newUser);
@@ -45,6 +46,11 @@ io.on('connection', (socket) => {
         socket.on(EVENTS.USER_SEND_MESSAGE, (msg) => {
             const user = getCurrentUser(uid);
             user && io.emit(EVENTS.SERVER_SEND_MESSAGE, { msg: msg, sender: user.userName, time: `${moment().format('LT')}` });
+        })
+
+        socket.on(EVENTS.USER_SEND_IMAGE, (payload) => {
+            const user = getCurrentUser(uid);
+            user && io.emit(EVENTS.SERVER_SEND_IMAGE, { ...payload, sender: user.userName, time: `${moment().format('LT')}` });
         })
 
         socket.on('disconnect', () => {

@@ -14,7 +14,6 @@ const getCurrentUser = (uid) => {
 const removeUser = (uid) => {
     const removedUser = getCurrentUser(uid);
     users = users.filter(user => user.uid !== uid)
-    console.log(removedUser);
     if (removedUser) {
         return removedUser;
     }
