@@ -32,7 +32,9 @@ server.listen(PORT, () => {
     console.log(`server is listen on port ${PORT}`);
 })
 
-const io = socketio(server);
+const io = socketio(server, {
+    maxHttpBufferSize: 1e8
+});
 
 io.on('connection', (socket) => {
     const uid = socket.id;

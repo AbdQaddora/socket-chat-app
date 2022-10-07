@@ -1,4 +1,5 @@
 const socket = io();
+
 const EVENTS = {
     SERVER_SEND_MESSAGE: 'SERVER_SEND_MESSAGE',
     USER_SEND_MESSAGE: 'USER_SEND_MESSAGE',
@@ -46,7 +47,7 @@ messageForm && messageForm.addEventListener('submit', (e) => {
         const payload = {
             body: image,
             memtType: image.type,
-            name: image.name
+            name: image.name,
         }
 
         socket.emit(EVENTS.USER_SEND_IMAGE, payload);
