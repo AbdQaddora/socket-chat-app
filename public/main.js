@@ -100,11 +100,12 @@ const GenerateNewImageMessageBlock = (imgName, sender, time, containerId) => {
     ${sender} <span class="text-info text-uppercase">${time}</span>
     </span>
     <span class="message-data img-msg">
-           <img alt="${imgName}" class="rounded" id="${containerId}"/>
+           <img alt="${imgName}" class="rounded" id="${containerId}" onclick="showImageInModal(this.src)"/>
         </span>
     </div>
     `;
 }
+
 
 
 
