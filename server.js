@@ -51,7 +51,7 @@ io.on('connection', (socket) => {
         })
 
         socket.on(EVENTS.USER_SEND_IMAGE, (payload) => {
-            const user = getCurrentUser(uid);
+            const user = getCurrentUser(payload.uid);
             user && io.emit(EVENTS.SERVER_SEND_IMAGE, { ...payload, sender: user.userName, time: `${moment().format('LT')}` });
         })
 

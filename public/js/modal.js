@@ -9,7 +9,6 @@ const changeModalImageSrc = (src) => {
 }
 
 const showImageInModal = (src) => {
-    console.log(src);
     changeModalImageSrc(src);
     openModal();
 }
